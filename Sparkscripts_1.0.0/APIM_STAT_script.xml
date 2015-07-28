@@ -3,11 +3,9 @@
     <Name>APIM_STAT_script</Name>
 <Script>
 
-create temporary table APIRequestSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_REQUEST_SUMMARY");
-
-create temporary table APIRequestData USING CarbonAnalytics 
-OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_REQUEST");  
+CREATE TEMPORARY TABLE APIRequestSummaryData USING CarbonAnalytics OPTIONS (tableName "API_REQUEST_SUMMARY", schema "api string -i,api_version string  -i, version string  -i, apiPublisher string -i,consumerKey string -i,userId string -i,context string -i,max_request_time LONG -i,total_request_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api,api_version,version,apiPublisher,consumerKey,userId,context,hostName,time");
+        
+create temporary table APIRequestData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_REQUEST");  
                            
 insert overwrite table APIRequestSummaryData select api, api_version,version, apiPublisher, 
 COALESCE(consumerKey,''),
@@ -27,15 +25,12 @@ substring(cast(requestTime/1000 as timestamp),6,2),
 substring(cast(requestTime/1000 as timestamp),9,2),
 substring(cast(requestTime/1000 as timestamp),12,2),
 substring(cast(requestTime/1000 as timestamp),15,2),
-substring(cast(requestTime/1000 as timestamp),0,16);                         
-                          
-
-
-
+substring(cast(requestTime/1000 as timestamp),0,16);                            
                             
-create temporary table APIVersionUsageSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_VERSION_USAGE_SUMMARY");
-   
+                            
+
+CREATE TEMPORARY TABLE APIVersionUsageSummaryData USING CarbonAnalytics OPTIONS (tableName "API_VERSION_USAGE_SUMMARY", schema "api string -i, version string  -i, apiPublisher string -i,context string -i,total_request_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api,version,apiPublisher,context,hostName,time");
+  
 insert overwrite table APIVersionUsageSummaryData select
 api,version,apiPublisher,context,sum(request) as total_request_count,hostName,
 
@@ -53,16 +48,13 @@ substring(cast(requestTime/1000 as timestamp),6,2),
 substring(cast(requestTime/1000 as timestamp),9,2),
 substring(cast(requestTime/1000 as timestamp),12,2),
 substring(cast(requestTime/1000 as timestamp),15,2),
-substring(cast(requestTime/1000 as timestamp),0,16);   
+substring(cast(requestTime/1000 as timestamp),0,16);            
 
 
 
 
 
-
-                            
-create temporary table APIResourcePathUsageSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_Resource_USAGE_SUMMARY");
+CREATE TEMPORARY TABLE APIResourcePathUsageSummaryData USING CarbonAnalytics OPTIONS (tableName "API_Resource_USAGE_SUMMARY", schema "api string -i, version string  -i, apiPublisher string -i,consumerKey string -i,resourcePath string -i,context string -i,method string -i,total_request_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api,version,apiPublisher,consumerKey,context,resourcePath,method,hostName,time");
 
 insert overwrite table APIResourcePathUsageSummaryData select 
 api,version,apiPublisher,COALESCE(consumerKey,''),
@@ -81,18 +73,14 @@ substring(cast(requestTime/1000 as timestamp),6,2),
 substring(cast(requestTime/1000 as timestamp),9,2),
 substring(cast(requestTime/1000 as timestamp),12,2),
 substring(cast(requestTime/1000 as timestamp),15,2),
-substring(cast(requestTime/1000 as timestamp),0,16); 
+substring(cast(requestTime/1000 as timestamp),0,16);                
+                            
+                            
+                            
+                            
+CREATE TEMPORARY TABLE APIResponseSummaryData USING CarbonAnalytics OPTIONS (tableName "API_RESPONSE_SUMMARY", schema "api_version string -i,apiPublisher string -i,context string -i,serviceTime LONG -i,total_request_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api_version,apiPublisher,context,hostName,time");                            
 
-
-
-
-
-                                                     
-create temporary table APIResponseSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_RESPONSE_SUMMARY");
-
-create temporary table APIResponseData USING CarbonAnalytics 
-OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_RESPONSE");   
+create temporary table APIResponseData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_RESPONSE");
 
 insert overwrite table APIResponseSummaryData select 
 api_version,
@@ -113,20 +101,15 @@ substring(cast(eventTime/1000 as timestamp),6,2),
 substring(cast(eventTime/1000 as timestamp),9,2),
 substring(cast(eventTime/1000 as timestamp),12,2),
 substring(cast(eventTime/1000 as timestamp),15,2),
-substring(cast(eventTime/1000 as timestamp),0,16);               
-                            
+substring(cast(eventTime/1000 as timestamp),0,16);
 
 
 
 
 
+CREATE TEMPORARY TABLE APIFaultSummaryData USING CarbonAnalytics OPTIONS (tableName "API_FAULT_SUMMARY", schema "api string -i, version string  -i, apiPublisher string -i,consumerKey string -i,context string -i,total_fault_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api,version,apiPublisher,context,hostName,time");
 
-                            
-create temporary table APIFaultSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_FAULT_SUMMARY");
-
-create temporary table APIFaultData USING CarbonAnalytics 
-OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_FAULT");                     
+create temporary table APIFaultData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_FAULT");                     
                             
 insert overwrite table APIFaultSummaryData select 
 api,version,apiPublisher,COALESCE(consumerKey,''),context,
@@ -144,19 +127,15 @@ substring(cast(requestTime/1000 as timestamp),6,2),
 substring(cast(requestTime/1000 as timestamp),9,2),
 substring(cast(requestTime/1000 as timestamp),12,2),
 substring(cast(requestTime/1000 as timestamp),15,2),
-substring(cast(requestTime/1000 as timestamp),0,16);           
-                            
-               
+substring(cast(requestTime/1000 as timestamp),0,16);
 
 
 
 
 
-create temporary table APIDestinationDataSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
-OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_DESTINATION_SUMMARY");
+CREATE TEMPORARY TABLE APIDestinationDataSummaryData USING CarbonAnalytics OPTIONS (tableName "API_DESTINATION_SUMMARY", schema "api string -i, version string  -i, apiPublisher string -i,context string -i,destination string -i,total_request_count INT -i,hostName string -i,year INT -i,month INT -i,day INT -i,time string -i",primaryKeys "api,version,apiPublisher,context,destination,hostName,time");
 
-create temporary table APIDestinationData USING CarbonAnalytics 
-OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_DESTINATION");                       
+create temporary table APIDestinationData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_APIMGT_STATISTICS_DESTINATION");                       
                             
 insert overwrite table APIDestinationDataSummaryData select 
 api,version,apiPublisher, context,destination, sum(request) as total_request_count,hostName, 
@@ -175,9 +154,9 @@ substring(cast(requestTime/1000 as timestamp),9,2),
 substring(cast(requestTime/1000 as timestamp),12,2),
 substring(cast(requestTime/1000 as timestamp),15,2),
 substring(cast(requestTime/1000 as timestamp),0,16);                       
+                                                        
                             
-                    
-
+                                             
 </Script>
     <CronExpression>0 * * * * ?</CronExpression>
 </Analytics>
