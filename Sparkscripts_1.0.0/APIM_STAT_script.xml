@@ -3,7 +3,7 @@
     <Name>APIM_STAT_script</Name>
 <Script>
 
-create temporary table APIRequestSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIRequestSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_REQUEST_SUMMARY");
 
 create temporary table APIRequestData USING CarbonAnalytics 
@@ -33,7 +33,7 @@ substring(cast(requestTime/1000 as timestamp),0,16);
 
 
                             
-create temporary table APIVersionUsageSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIVersionUsageSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_VERSION_USAGE_SUMMARY");
    
 insert overwrite table APIVersionUsageSummaryData select
@@ -61,7 +61,7 @@ substring(cast(requestTime/1000 as timestamp),0,16);
 
 
                             
-create temporary table APIResourcePathUsageSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIResourcePathUsageSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_Resource_USAGE_SUMMARY");
 
 insert overwrite table APIResourcePathUsageSummaryData select 
@@ -88,7 +88,7 @@ substring(cast(requestTime/1000 as timestamp),0,16);
 
 
                                                      
-create temporary table APIResponseSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIResponseSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_RESPONSE_SUMMARY");
 
 create temporary table APIResponseData USING CarbonAnalytics 
@@ -122,7 +122,7 @@ substring(cast(eventTime/1000 as timestamp),0,16);
 
 
                             
-create temporary table APIFaultSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIFaultSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_FAULT_SUMMARY");
 
 create temporary table APIFaultData USING CarbonAnalytics 
@@ -152,7 +152,7 @@ substring(cast(requestTime/1000 as timestamp),0,16);
 
 
 
-create temporary table APIDestinationDataSummaryData USING org.apache.spark.sql.jdbc.wso2.Wso2JdbcDS 
+create temporary table APIDestinationDataSummaryData USING jdbc 
 OPTIONS(driver "com.mysql.jdbc.Driver", url "jdbc:mysql://localhost:3306/das?useUnicode=true&amp;characterEncoding=UTF-8&amp;user=root&amp;password=pass", dbtable "API_DESTINATION_SUMMARY");
 
 create temporary table APIDestinationData USING CarbonAnalytics 
